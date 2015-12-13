@@ -6,21 +6,26 @@
 from splinter.browser import Browser
 from time import sleep
 import traceback
+import configparser
+
+filename = "info.ini"
+parse = configparser.ConfigParser()
+parse.read(filename)
 
 ###容错做的不好，考虑的情况也不够多，大家见谅
 
 # 用户名，密码
-username = u"xxxx"
-passwd = u"xxxx"
+username = parse.get("info","username")
+passwd = parse.get("info","passwd")
 # cookies值得自己去找, 下面两个分别是上海, 营口东
-starts = u"%u5317%u4EAC%2CBJP"
-ends = u"%u6210%u90FD%2CCDW"
+starts = parse.get("info","starts")
+ends = parse.get("info","ends")
 # 时间格式2016-01-31
-dtime = u"2016-02-10"
+dtime = parse.get("info","dtime")
 # 车次，选择第几趟，0则从上之下依次点击
-order = 0
+order = parse.getint("info","order")
 ###乘客名
-pa = u"xxxx"
+pa = parse.get("info","pa")
 
 """网址"""
 ticket_url = "https://kyfw.12306.cn/otn/leftTicket/init"
