@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@author: Akagi201
+@author: 
 """
 
 from splinter.browser import Browser
@@ -8,7 +8,7 @@ from time import sleep
 import traceback
 import configparser
 
-filename = "info.ini"
+filename = "lzn.ini"
 parse = configparser.ConfigParser()
 parse.read(filename)
 
@@ -118,7 +118,7 @@ def huoche():
                 sleep(2)
                 #b.execute_script("$('a:contains("+tnum+")').closest('tr').children('td:eq("+seat+")').addClass('abcde')")
                 #flag = b.find_by_xpath("//td[@class='abcde']").text
-                flag = b.find_by_xpath("//td[contains(@id,'"+seat+"_240000"+tnum+"')]").text
+                flag = b.find_by_xpath("//td[contains(@id,'"+seat+"')][contains(@id,'"+tnum+"')]").text
                 print (u"循环点击查询... 第 %s 次 tickets count is %s" % (count,flag))
                 try:
                     #for i in b.find_by_text(u"预订"):
