@@ -16,6 +16,7 @@ parse.read(filename)
 
 # 用户名，密码
 username = parse.get("info","username")
+usernamecn = parse.get("info","usernamecn")
 passwd = parse.get("info","passwd")
 # cookies值得自己去找, 下面两个分别是上海, 营口东
 starts = parse.get("info","starts")
@@ -26,6 +27,13 @@ dtime = parse.get("info","dtime")
 order = parse.getint("info","order")
 ###乘客名
 pa = parse.get("info","pa")
+
+
+### 车次
+tnum = parse.get("info","tnum")
+
+seat = parse.get("info","seat")
+seatcn = parse.get("info","seatcn")
 
 """网址"""
 ticket_url = "https://kyfw.12306.cn/otn/leftTicket/init"
@@ -73,11 +81,11 @@ def huoche():
 
         b.find_by_text(u"更多选项").click()
         sleep(1)
-        b.find_by_id("inp-train").fill("k117")
+        b.find_by_id("inp-train").fill(tnum)
         b.find_by_id("add-train").click()
-        b.find_by_text(u"K-快速").click()
+        #b.find_by_text(u"K-快速").click()
         b.find_by_text(u"请选择")[1].click()
-        b.find_by_text(u"硬卧")[1].click()
+        b.find_by_text(seatcn)[1].click()
         b.execute_script("$.closeSelectSeat()")
         sleep(2)
 
@@ -101,26 +109,47 @@ def huoche():
             while b.url == ticket_url:
                 b.find_by_text(u"查询").click()
                 count += 1
-                flag = b.find_by_id("YW_240000K11711")[0].text
-                print (u"循环点击查询... 第 %s 次 tickets count is %s" % (count,flag))
+                #flag = b.find_by_id("YW_240000K11711")[0].text
+                
+                                
+               
                 
                 #print ("ticket count is %s" % flag)
-                
+                sleep(2)
+                #b.execute_script("$('a:contains("+tnum+")').closest('tr').children('td:eq("+seat+")').addClass('abcde')")
+                #flag = b.find_by_xpath("//td[@class='abcde']").text
+                flag = b.find_by_xpath("//td[contains(@id,'"+seat+"_240000"+tnum+"')]").text
+                print (u"循环点击查询... 第 %s 次 tickets count is %s" % (count,flag))
                 try:
                     #for i in b.find_by_text(u"预订"):
                     #    i.click()
                     if flag != "--" and flag != u"无":
-                        b.execute_script("$($('#YW_240000K11711').nextAll()[4]).children().click()")
+                        b.execute_script("$('a:contains("+tnum+")').closest('tr').children('td:last').children().click()")
                         break
                 except:
                     print (u"还没开始预订")
                     continue
-                sleep(5)
+                sleep(3)
+
+        pat = pa.split(",")
         
         while True:
             try:
-                b.find_by_text(pa)[1].click()
-                break
+                flag = True
+                for p in pat:
+                    if p == usernamecn:
+                        if b.find_by_text(p)[1].checked != True:
+                            flag = False
+                            b.find_by_text(p)[1].check()
+                            flag = True
+                    else:
+                        if b.find_by_text(p)[0].checked != True:
+                            flag = False
+                            b.find_by_text(p)[0].check()
+                            flag = True
+                    print (u"选择乘客：%s" % p)
+                if flag:
+                    break
             except:
                 print (u"努力选中陛下的乘客信息中~~~")
             sleep(0.5)
