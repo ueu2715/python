@@ -8,7 +8,7 @@ from time import sleep
 import traceback
 import configparser
 
-filename = "lzn.ini"
+filename = "info.ini"
 parse = configparser.ConfigParser()
 parse.read(filename)
 
